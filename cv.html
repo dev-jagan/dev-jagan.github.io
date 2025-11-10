@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My CV</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevents scrolling on the body */
+        }
+        .cv-container {
+            width: 100%;
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            flex-direction: column;
+        }
+        .cv-header {
+            padding: 1rem;
+            background-color: var(--surface-color);
+            text-align: center;
+            border-bottom: 1px solid var(--primary-color);
+        }
+        .cv-header a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 1rem;
+        }
+        iframe {
+            flex-grow: 1; /* Takes up all available space */
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="cv-container">
+        <div class="cv-header">
+            <a href="index.html">&larr; Back to Portfolio</a>
+            <a href="https://drive.google.com/file/d/1AutOIegkBST5efhArdmps2-5C3kJl3uY/view?usp=sharing" target="_blank">Open in New Tab or Download</a>
+        </div>
+        <iframe src="https://drive.google.com/file/d/1AutOIegkBST5efhArdmps2-5C3kJl3uY/preview"></iframe>
+    </div>
+</body>
+</html>
