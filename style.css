@@ -442,3 +442,518 @@ section h2 {
 .app-link:hover {
     text-decoration: underline;
 }
+
+/* ============================================
+   Vibrant Animated Timeline (Work Experience)
+   ============================================ */
+
+#experience {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ambient animated gradient blobs behind the timeline */
+#experience::before,
+#experience::after {
+    content: '';
+    position: absolute;
+    width: 480px;
+    height: 480px;
+    border-radius: 50%;
+    filter: blur(130px);
+    opacity: 0.22;
+    pointer-events: none;
+    z-index: 0;
+}
+
+#experience::before {
+    background: radial-gradient(circle, #ff6ec4, transparent 70%);
+    top: -120px;
+    left: -120px;
+    animation: blobFloat 14s ease-in-out infinite alternate;
+}
+
+#experience::after {
+    background: radial-gradient(circle, #00c6ff, transparent 70%);
+    bottom: -120px;
+    right: -120px;
+    animation: blobFloat 18s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes blobFloat {
+    0%   { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(70px, 50px) scale(1.25); }
+}
+
+#experience .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Gradient animated heading */
+#experience h2 {
+    background: linear-gradient(90deg, #ff6ec4, #7873f5, #00c6ff, #ff6ec4);
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 5s linear infinite;
+}
+
+@keyframes gradientShift {
+    to { background-position: 220% center; }
+}
+
+/* ---------- Timeline base ---------- */
+.timeline {
+    position: relative;
+    padding: 2.5rem 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 3px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, rgba(255, 110, 196, 0.15), rgba(0, 198, 255, 0.15));
+    border-radius: 3px;
+    z-index: 1;
+}
+
+/* Animated fill line that grows as you scroll */
+.timeline-progress {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 3px;
+    height: 100%;
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: top;
+    border-radius: 3px;
+    background: linear-gradient(180deg, #ff6ec4, #7873f5, #00c6ff, #22d3ee, #ff6ec4);
+    background-size: 100% 300%;
+    box-shadow: 0 0 12px rgba(0, 198, 255, 0.8), 0 0 30px rgba(120, 115, 245, 0.5);
+    animation: fillGradient 6s linear infinite;
+    z-index: 2;
+}
+
+@keyframes fillGradient {
+    0%   { background-position: 0 0; }
+    100% { background-position: 0 300%; }
+}
+
+/* ---------- Timeline items ---------- */
+.timeline-item {
+    position: relative;
+    width: 50%;
+    padding: 0.75rem 2.5rem 2.25rem 2.5rem;
+    z-index: 3;
+    opacity: 0;
+    transform: translateX(var(--slide, 60px));
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    --slide: 60px;
+}
+
+.timeline-item:nth-child(even) {
+    left: 50%;
+    --slide: -60px;
+}
+
+.timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Vibrant per-item accent palette (cycles through 3 schemes) */
+.timeline-item:nth-child(3n+1) { --c1: #ff6ec4; --c2: #7873f5; --glow: 255, 110, 196; }
+.timeline-item:nth-child(3n+2) { --c1: #00c6ff; --c2: #22d3ee; --glow: 0, 198, 255; }
+.timeline-item:nth-child(3n+3) { --c1: #f857a6; --c2: #ffb347; --glow: 248, 87, 166; }
+
+/* ---------- Timeline dots ---------- */
+.timeline-dot {
+    position: absolute;
+    top: 1.4rem;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--c1), var(--c2));
+    z-index: 4;
+}
+
+.timeline-item:nth-child(odd) .timeline-dot { right: -9px; }
+.timeline-item:nth-child(even) .timeline-dot { left: -9px; }
+
+.timeline-dot::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid rgba(var(--glow), 0.6);
+    animation: dotPulse 2.4s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+}
+
+.timeline-dot::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+    animation: dotSpark 2.4s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+    0%   { transform: scale(0.7); opacity: 1; }
+    70%  { transform: scale(1.9); opacity: 0; }
+    100% { transform: scale(0.7); opacity: 0; }
+}
+
+@keyframes dotSpark {
+    0%, 100% { transform: scale(0.9); }
+    50%      { transform: scale(1.15); }
+}
+
+/* ---------- Timeline cards ---------- */
+.timeline-content .card {
+    background: linear-gradient(150deg, rgba(30, 30, 30, 0.92), rgba(18, 18, 18, 0.92));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 4px solid var(--c1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.4s ease,
+                border-color 0.4s ease;
+}
+
+/* Soft gradient wash inside each card */
+.timeline-content .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(var(--glow), 0.10), transparent 45%);
+    pointer-events: none;
+}
+
+.timeline-content .card:hover {
+    transform: translateY(-8px);
+    border-color: var(--c2);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55),
+                0 0 28px rgba(var(--glow), 0.35);
+}
+
+/* Gradient shimmer sweep on hover */
+.timeline-content .card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.09), transparent);
+    transform: skewX(-20deg);
+    pointer-events: none;
+    transition: left 0.6s ease;
+}
+
+.timeline-content .card:hover::after {
+    left: 120%;
+}
+
+/* Gradient text for card titles */
+.timeline-content .card h3 {
+    background: linear-gradient(90deg, var(--c1), var(--c2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 100% 100%;
+}
+
+/* Alternate alignment for left/right items */
+.timeline-item:nth-child(odd) .timeline-content {
+    text-align: right;
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+    text-align: left;
+}
+
+/* ---------- Responsive timeline ---------- */
+@media (max-width: 768px) {
+    .timeline::before,
+    .timeline-progress {
+        left: 18px;
+    }
+
+    .timeline-item,
+    .timeline-item:nth-child(even) {
+        width: 100%;
+        left: 0;
+        padding: 0.5rem 0 2rem 3.25rem;
+        text-align: left;
+        --slide: 40px;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content {
+        text-align: left;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-dot,
+    .timeline-item:nth-child(even) .timeline-dot {
+        left: 9px;
+        right: auto;
+    }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .timeline-item {
+        opacity: 1;
+        transform: none;
+    }
+    .timeline-progress {
+        animation: none;
+    }
+    .timeline-dot::before,
+    .timeline-dot::after,
+    #experience h2,
+    #experience::before,
+    #experience::after {
+        animation: none;
+    }
+}
+
+/* ============================================
+   Animated Overview "Career Map" Timeline
+   ============================================ */
+
+.timeline-overview {
+    position: relative;
+    margin-bottom: 2.75rem;
+    padding: 1.35rem 1.5rem 1rem;
+    border-radius: 14px;
+    background: linear-gradient(150deg, rgba(30, 30, 30, 0.92), rgba(18, 18, 18, 0.92));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+}
+
+.timeline-overview::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ff6ec4, #7873f5, #00c6ff, #ff6ec4);
+    background-size: 220% auto;
+    animation: gradientShift 5s linear infinite;
+}
+
+.overview-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-secondary-color);
+    margin-bottom: 0.9rem;
+}
+
+.overview-hint {
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.72rem;
+}
+
+/* Snake map canvas */
+.overview-map {
+    position: relative;
+    padding-top: 0.35rem;
+}
+
+.overview-snake {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.overview-snake-base,
+.overview-snake-fill {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.overview-snake-base {
+    stroke: rgba(255, 255, 255, 0.22);
+    stroke-width: 3;
+}
+
+.overview-snake-fill {
+    stroke: url(#snakeGrad);
+    stroke-width: 3;
+    opacity: 0.95;
+    filter: drop-shadow(0 0 6px rgba(0, 198, 255, 0.55));
+}
+
+/* Glowing head dot that travels along the snake */
+.overview-head {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ffffff, #00c6ff 70%);
+    box-shadow: 0 0 14px rgba(0, 198, 255, 0.9);
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+}
+
+/* Node track: vertical stack of snake rows */
+.overview-track {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.overview-row {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.overview-row.reversed {
+    flex-direction: row-reverse;
+}
+
+/* Per-item accent palette (matches main timeline) */
+.overview-node:nth-child(3n+1) { --c1: #ff6ec4; --c2: #7873f5; --glow: 255, 110, 196; }
+.overview-node:nth-child(3n+2) { --c1: #00c6ff; --c2: #22d3ee; --glow: 0, 198, 255; }
+.overview-node:nth-child(3n+3) { --c1: #f857a6; --c2: #ffb347; --glow: 248, 87, 166; }
+
+/* Node buttons */
+.overview-node {
+    flex: 1 1 0;
+    min-width: 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-color);
+    font-family: inherit;
+    cursor: pointer;
+    text-align: left;
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s ease,
+                border-color 0.3s ease,
+                background 0.3s ease;
+}
+
+.overview-node:hover {
+    transform: translateY(-3px);
+    border-color: var(--c2);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.overview-node.active {
+    transform: translateY(-3px);
+    border-color: var(--c1);
+    background: linear-gradient(150deg, rgba(var(--glow), 0.14), rgba(255, 255, 255, 0.03));
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45), 0 0 20px rgba(var(--glow), 0.35);
+}
+
+/* Metro-style station dots */
+.overview-station {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2.5px solid rgba(255, 255, 255, 0.45);
+    background: var(--background-color);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.12);
+    transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.overview-node.visited .overview-station {
+    border-color: var(--c1);
+    background: rgba(var(--glow), 0.35);
+    box-shadow: 0 0 10px rgba(var(--glow), 0.3);
+}
+
+.overview-node.active .overview-station {
+    border-color: var(--c2);
+    background: var(--c1);
+    box-shadow: 0 0 14px rgba(var(--glow), 0.9), 0 0 26px rgba(var(--glow), 0.5);
+    animation: stationPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes stationPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(var(--glow), 0.8), 0 0 20px rgba(var(--glow), 0.4); }
+    50%      { box-shadow: 0 0 18px rgba(var(--glow), 1), 0 0 36px rgba(var(--glow), 0.7); }
+}
+
+.overview-date {
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary-color);
+}
+
+.overview-title {
+    font-size: 0.84rem;
+    font-weight: 700;
+    line-height: 1.25;
+    background: linear-gradient(90deg, var(--c1), var(--c2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.25;
+    transition: opacity 0.35s ease;
+}
+
+.overview-node.visited .overview-title,
+.overview-node.active .overview-title {
+    opacity: 1;
+}
+
+.overview-node:hover .overview-title {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .timeline-overview::before {
+        animation: none;
+    }
+    .overview-head {
+        display: none;
+    }
+}
