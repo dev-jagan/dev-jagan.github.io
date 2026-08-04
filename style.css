@@ -1027,3 +1027,150 @@ section h2 {
         display: none;
     }
 }
+
+/* ============================================
+   Simple Original Theme
+   Removes vibrant gradients, glows and effects;
+   everything uses the single blue accent.
+   ============================================ */
+
+/* Remove ambient gradient blobs behind the timeline */
+#experience::before,
+#experience::after {
+    display: none;
+}
+
+/* Solid heading instead of animated gradient text */
+#experience h2 {
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    -webkit-text-fill-color: var(--primary-color);
+    color: var(--primary-color);
+    animation: none;
+}
+
+/* Single accent for every item (no pink/cyan/orange cycling) */
+.overview-node,
+.timeline-item {
+    --c1: var(--primary-color) !important;
+    --c2: var(--secondary-color) !important;
+    --glow: 0, 170, 255 !important;
+}
+
+/* Flat snake lines in the single accent color */
+.overview-snake-fill,
+.timeline-snake-fill {
+    stroke: var(--primary-color);
+    opacity: 1;
+    filter: none;
+}
+
+.overview-snake-base,
+.timeline-snake-base {
+    stroke: rgba(255, 255, 255, 0.18);
+}
+
+/* Solid head dots, no glow */
+.overview-head,
+.timeline-head {
+    background: var(--primary-color);
+    box-shadow: none;
+}
+
+/* Solid accent titles instead of gradient text */
+.overview-title,
+.timeline-content .card h3 {
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    -webkit-text-fill-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Remove gradient wash and shimmer from cards */
+.timeline-content .card::before,
+.timeline-content .card::after {
+    display: none;
+}
+
+/* Simple card hover / active state */
+.timeline-content .card:hover,
+.timeline-item.active .timeline-content .card,
+.overview-node:hover,
+.overview-node.active {
+    transform: translateY(-4px);
+    border-color: var(--primary-color);
+    background: var(--surface-color);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Flat section panels */
+.timeline-overview {
+    background: var(--surface-color);
+    box-shadow: none;
+}
+
+/* Remove the gradient top border strip on the overview */
+.timeline-overview::before {
+    background: var(--primary-color);
+    animation: none;
+}
+
+/* Simple station dots, no pulse glow */
+.overview-station,
+.timeline-dot {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: var(--background-color);
+    box-shadow: none;
+    animation: none;
+}
+
+.overview-node.visited .overview-station,
+.timeline-item.visited .timeline-dot {
+    border-color: var(--primary-color);
+    background: rgba(0, 170, 255, 0.18);
+    box-shadow: none;
+}
+
+.overview-node.active .overview-station,
+.timeline-item.active .timeline-dot {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    box-shadow: none;
+    animation: none;
+}
+
+/* Flat Hire Me buttons */
+.hire {
+    background: none;
+}
+
+.hire-cta,
+.hire-btn.email {
+    background: var(--primary-color);
+    color: #0b0f14;
+    box-shadow: none;
+}
+
+.hire-btn.whatsapp {
+    background: #25d366;
+    color: #0b0f14;
+    box-shadow: none;
+}
+
+.hire-cta:hover,
+.hire-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: none;
+}
+
+.hire-nav {
+    border-color: var(--primary-color);
+    color: var(--primary-color) !important;
+}
+
+.hire-nav:hover {
+    background: var(--primary-color);
+    color: #0b0f14 !important;
+}
