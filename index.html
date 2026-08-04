@@ -21,6 +21,7 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#experience">Work</a></li>
                     <li><a href="#skills">Skills</a></li>
+                    <li><a href="#hire" class="hire-nav">Hire Me</a></li>
                     <li><a href="#contact">Contact</a></li>
                     <li><a href="cv.html" target="_blank">CV</a></li>
                 </ul>
@@ -38,6 +39,7 @@
                 <a href="https://play.google.com/store/apps/developer?id=FutureDroid_Ai" target="_blank">Google Play</a>
                 <a href="cv.html" target="_blank">View My CV</a>
             </div>
+            <a href="#hire" class="hire-cta">Hire Me</a>
         </div>
     </section>
 
@@ -157,7 +159,18 @@
                 </div>
             </div>
             <div class="timeline">
-                <div class="timeline-progress"></div>
+                <svg class="timeline-snake" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="timelineGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#ff6ec4"/>
+                            <stop offset="50%" stop-color="#7873f5"/>
+                            <stop offset="100%" stop-color="#00c6ff"/>
+                        </linearGradient>
+                    </defs>
+                    <polyline class="timeline-snake-base"></polyline>
+                    <polyline class="timeline-snake-fill"></polyline>
+                </svg>
+                <div class="timeline-head" aria-hidden="true"></div>
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
@@ -436,6 +449,17 @@
         </div>
     </section>
 
+    <section id="hire" class="hire">
+        <div class="container">
+            <h2>Hire Me</h2>
+            <p class="hire-tagline">Open to <strong>part-time</strong>, <strong>full-time</strong>, <strong>contract</strong>, or <strong>freelance</strong> work — let's build something great together.</p>
+            <div class="hire-actions">
+                <a href="mailto:heyjagn@gmail.com" class="hire-btn email">Email Me</a>
+                <a href="https://wa.me/919380220334" target="_blank" rel="noopener" class="hire-btn whatsapp">WhatsApp</a>
+            </div>
+        </div>
+    </section>
+
     <footer id="contact" class="footer">
         <div class="container">
             <h2>Contact Me</h2>
@@ -444,6 +468,7 @@
             <div class="social-links">
                  <a href="https://www.linkedin.com/in/jagannath-m-9b05201a5/" target="_blank">LinkedIn</a>
                 <a href="https://github.com/dev-jagan" target="_blank">GitHub</a>
+                <a href="https://wa.me/919380220334" target="_blank" rel="noopener">WhatsApp</a>
             </div>
         </div>
     </footer>

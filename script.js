@@ -28,10 +28,10 @@ document.querySelectorAll('.nav-links a').forEach(link => {
    ============================================ */
 
 const timeline = document.querySelector('.timeline');
-const timelineItems = document.querySelectorAll('.timeline-item');
+const timelineItems = Array.from(document.querySelectorAll('.timeline-item'));
 
 if (timeline && timelineItems.length) {
-    // Reveal each timeline item as it scrolls into view
+    // Reveal each timeline card as it scrolls into view
     const revealObserver = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -42,32 +42,6 @@ if (timeline && timelineItems.length) {
     }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
     timelineItems.forEach(item => revealObserver.observe(item));
-
-    // Grow the glowing progress line as the user scrolls through the timeline
-    const progressLine = document.querySelector('.timeline-progress');
-
-    function updateTimelineProgress() {
-        const rect = timeline.getBoundingClientRect();
-        const total = timeline.offsetHeight;
-        const viewport = window.innerHeight;
-
-        if (rect.top >= viewport) {
-            progressLine.style.transform = 'translateX(-50%) scaleY(0)';
-            return;
-        }
-        if (rect.bottom <= 0) {
-            progressLine.style.transform = 'translateX(-50%) scaleY(1)';
-            return;
-        }
-
-        const scrolled = viewport - rect.top;
-        const ratio = Math.min(1, Math.max(0, scrolled / total));
-        progressLine.style.transform = 'translateX(-50%) scaleY(' + ratio + ')';
-    }
-
-    window.addEventListener('scroll', updateTimelineProgress, { passive: true });
-    window.addEventListener('resize', updateTimelineProgress);
-    updateTimelineProgress();
 }
 
 /* ============================================
@@ -82,6 +56,10 @@ const overviewNodes = Array.from(document.querySelectorAll('.overview-node'));
 const snakeBase = document.querySelector('.overview-snake-base');
 const snakeFill = document.querySelector('.overview-snake-fill');
 const snakeHead = document.querySelector('.overview-head');
+const timelineEl = document.querySelector('.timeline');
+const timelineBase = document.querySelector('.timeline-snake-base');
+const timelineFill = document.querySelector('.timeline-snake-fill');
+const timelineHead = document.querySelector('.timeline-head');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 if (overviewMap && overviewNodes.length && overviewNodes.length === timelineItems.length) {
@@ -94,7 +72,6 @@ if (overviewMap && overviewNodes.length && overviewNodes.length === timelineItem
     let activeIndex = 0;
     let rafId = null;
     let lastFrame = 0;
-    let suppressSync = false;
 
     // ---- Layout: snake rows with alternating direction ----
     function getColumns() {
@@ -139,6 +116,79 @@ if (overviewMap && overviewNodes.length && overviewNodes.length === timelineItem
         snakeFill.setAttribute('points', pts);
     }
 
+    // ---- Timeline: mirror the overview snake, 3 cards per row ----
+    function getTimelineColumns() {
+        const w = window.innerWidth;
+        if (w >= 900) return 3;
+        if (w >= 600) return 2;
+        return 1;
+    }
+
+    function layoutTimelineRows() {
+        if (!timelineEl) return;
+        const rows = Array.from(timelineEl.querySelectorAll('.timeline-row'));
+        rows.forEach(r => r.remove());
+        const cols = getTimelineColumns();
+        for (let i = 0; i < N; i += cols) {
+            const row = document.createElement('div');
+            row.className = 'timeline-row';
+            if ((i / cols) % 2 === 1) row.classList.add('reversed');
+            timelineItems.slice(i, i + cols).forEach(item => row.appendChild(item));
+            timelineEl.appendChild(row);
+        }
+    }
+
+    // ---- Snake path through the timeline station dots (in tour order) ----
+    function computeTimelinePath() {
+        if (!timelineEl || !timelineBase) return;
+        const tlRect = timelineEl.getBoundingClientRect();
+        const W = tlRect.width;
+        const H = tlRect.height;
+        const svg = timelineBase.parentNode;
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+        svg.setAttribute('width', W);
+        svg.setAttribute('height', H);
+
+        const pts = timelineItems.map(item => {
+            const dot = item.querySelector('.timeline-dot');
+            const r = dot ? dot.getBoundingClientRect() : item.getBoundingClientRect();
+            return (r.left - tlRect.left + r.width / 2).toFixed(1) + ',' +
+                   (r.top - tlRect.top + r.height / 2).toFixed(1);
+        }).join(' ');
+
+        timelineBase.setAttribute('points', pts);
+        timelineFill.setAttribute('points', pts);
+    }
+
+    function timelinePathLength() {
+        try { return timelineFill.getTotalLength(); } catch (e) { return 0; }
+    }
+
+    let timelineActiveIndex = -1;
+
+    function renderTimeline(progress) {
+        if (!timelineEl || !timelineFill) return;
+        const pr = Math.max(0, Math.min(1, progress));
+        const L = timelinePathLength();
+        timelineFill.style.strokeDasharray = L;
+        timelineFill.style.strokeDashoffset = L * (1 - pr);
+
+        const idx = Math.min(N - 1, Math.floor(pr * N));
+        if (idx !== timelineActiveIndex) {
+            timelineActiveIndex = idx;
+            timelineItems.forEach((item, i) => {
+                item.classList.toggle('active', i === idx);
+                item.classList.toggle('visited', i < idx);
+            });
+        }
+
+        if (L > 0) {
+            const pt = timelineFill.getPointAtLength(L * pr);
+            timelineHead.style.opacity = 1;
+            timelineHead.style.transform = 'translate(' + pt.x + 'px,' + pt.y + 'px) translate(-50%, -50%)';
+        }
+    }
+
     function pathLength() {
         try { return snakeFill.getTotalLength(); } catch (e) { return 0; }
     }
@@ -164,6 +214,8 @@ if (overviewMap && overviewNodes.length && overviewNodes.length === timelineItem
             snakeHead.style.opacity = 1;
             snakeHead.style.transform = 'translate(' + pt.x + 'px,' + pt.y + 'px) translate(-50%, -50%)';
         }
+
+        renderTimeline(p);
     }
 
     // ---- Tour loop: continuous smooth glide, easing into each station ----
@@ -185,68 +237,25 @@ if (overviewMap && overviewNodes.length && overviewNodes.length === timelineItem
         rafId = requestAnimationFrame(tick);
     }
 
-    function stopTour() {
-        if (rafId) {
-            cancelAnimationFrame(rafId);
-            rafId = null;
-        }
-    }
-
-    // ---- Click a node -> jump there + restart the tour from it ----
+    // ---- Click a node -> jump there, the tour keeps gliding from it ----
     overviewNodes.forEach((node, i) => {
         node.addEventListener('click', () => {
             elapsed = i * STEP_MS;
             render(i / N);
-            suppressSync = true;
-            window.setTimeout(() => { suppressSync = false; }, 1200);
             if (timelineItems[i]) {
                 timelineItems[i].scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
             }
-            stopTour();
-            startTour();
         });
     });
 
-    // Pause on hover / focus, resume on leave
-    overviewEl.addEventListener('mouseenter', stopTour);
-    overviewEl.addEventListener('mouseleave', startTour);
-    overviewEl.addEventListener('focusin', stopTour);
-    overviewEl.addEventListener('focusout', startTour);
-
-    // ---- Sync highlight to the work nearest the viewport center ----
-    let syncFrame = null;
-    function syncFromScroll() {
-        if (suppressSync) return;
-        const mid = window.innerHeight / 2;
-        let best = activeIndex;
-        let bestDist = Infinity;
-        timelineItems.forEach((item, i) => {
-            const r = item.getBoundingClientRect();
-            const d = Math.abs((r.top + r.height / 2) - mid);
-            if (d < bestDist) { bestDist = d; best = i; }
+    // Click a timeline card -> jump the shared tour to it
+    timelineItems.forEach((item, i) => {
+        item.addEventListener('click', (e) => {
+            if (e.target.closest('a')) return;
+            elapsed = i * STEP_MS;
+            render(i / N);
         });
-        if (best !== activeIndex) {
-            elapsed = best * STEP_MS;
-            render(best / N);
-        }
-    }
-
-    window.addEventListener('scroll', () => {
-        if (syncFrame) return;
-        syncFrame = requestAnimationFrame(() => {
-            syncFromScroll();
-            syncFrame = null;
-        });
-    }, { passive: true });
-
-    // ---- Run the tour only while the map is on screen ----
-    const overviewObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) startTour();
-            else stopTour();
-        });
-    }, { threshold: 0.05 });
-    overviewObserver.observe(overviewEl);
+    });
 
     // ---- Rebuild the snake on resize ----
     let resizeTimer = null;
@@ -255,6 +264,8 @@ if (overviewMap && overviewNodes.length && overviewNodes.length === timelineItem
         resizeTimer = window.setTimeout(() => {
             layoutRows();
             computePath();
+            layoutTimelineRows();
+            computeTimelinePath();
             render(p);
         }, 200);
     });
@@ -270,9 +281,12 @@ if (overviewMap && overviewNodes.length && overviewNodes.length === timelineItem
     });
     layoutRows();
     computePath();
+    layoutTimelineRows();
+    computeTimelinePath();
     if (reduceMotion) {
         render(1);
     } else {
         render(0);
+        startTour();
     }
 }
