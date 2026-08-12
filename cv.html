@@ -10,39 +10,71 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Prevents scrolling on the body */
+            overflow: hidden;
+            background: #fff;
         }
-        .cv-container {
+        .cv-frame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            background: #fff;
+        }
+        #cv-iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 100vh; /* Full viewport height */
-            display: flex;
-            flex-direction: column;
-        }
-        .cv-header {
-            padding: 1rem;
-            background-color: var(--surface-color);
-            text-align: center;
-            border-bottom: 1px solid var(--primary-color);
-        }
-        .cv-header a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: bold;
-            margin: 0 1rem;
-        }
-        iframe {
-            flex-grow: 1; /* Takes up all available space */
+            height: 100%;
             border: none;
+        }
+        .cv-fab {
+            position: fixed;
+            z-index: 20;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.3rem;
+            border-radius: 999px;
+            border: none;
+            background: var(--primary-color);
+            color: #0b0f14;
+            font-weight: bold;
+            font-size: 0.95rem;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .cv-fab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
+        }
+        .cv-fab-download {
+            bottom: 1.2rem;
+            right: 1.2rem;
+        }
+        .cv-fab-back {
+            top: 1rem;
+            left: 1rem;
+            background: var(--surface-color);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        @media (max-width: 600px) {
+            #cv-iframe {
+                top: 60px;
+                height: calc(100% - 60px);
+            }
         }
     </style>
 </head>
 <body>
-    <div class="cv-container">
-        <div class="cv-header">
-            <a href="index.html">&larr; Back to Portfolio</a>
-            <a href="https://docs.google.com/document/d/12XwSA4um3jKl8eB3ZBxdi1NVCKk9R04BnIB086RXmr8/preview" target="_blank">Open in New Tab or Download</a>
-        </div>
-        <iframe src="https://docs.google.com/document/d/12XwSA4um3jKl8eB3ZBxdi1NVCKk9R04BnIB086RXmr8/preview"></iframe>
+    <div class="cv-frame">
+        <iframe id="cv-iframe" src="https://drive.google.com/file/d/1eCDOeaJst7Og233NVIy0TpE58j1CXbwU/preview"></iframe>
     </div>
+    <a class="cv-fab cv-fab-back" href="index.html" aria-label="Back to Portfolio">&larr;</a>
+    <a class="cv-fab cv-fab-download" href="https://drive.google.com/uc?export=download&amp;id=1eCDOeaJst7Og233NVIy0TpE58j1CXbwU">Download PDF</a>
 </body>
 </html>
