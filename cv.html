@@ -62,19 +62,62 @@
             border: 1px solid var(--primary-color);
             color: var(--primary-color);
         }
+        .cv-mobile-bar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 30;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--primary-color);
+        }
+        .cv-mobile-bar a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            padding: 0.35rem 0.5rem;
+        }
+        .cv-mobile-bar a:hover {
+            text-decoration: underline;
+        }
+        .cv-mobile-bar .cv-mobile-download {
+            color: #0b0f14;
+            background: var(--primary-color);
+            border-radius: 999px;
+            padding: 0.4rem 1rem;
+        }
+        .cv-mobile-bar .cv-mobile-download:hover {
+            text-decoration: none;
+            filter: brightness(1.1);
+        }
         @media (max-width: 600px) {
+            .cv-fab {
+                display: none;
+            }
+            .cv-mobile-bar {
+                display: flex;
+            }
             #cv-iframe {
-                top: 60px;
-                height: calc(100% - 60px);
+                top: 54px;
+                height: calc(100% - 54px);
             }
         }
     </style>
 </head>
 <body>
     <div class="cv-frame">
-        <iframe id="cv-iframe" src="https://drive.google.com/file/d/1eCDOeaJst7Og233NVIy0TpE58j1CXbwU/preview"></iframe>
+        <iframe id="cv-iframe" src="cv.pdf"></iframe>
+    </div>
+    <div class="cv-mobile-bar">
+        <a href="index.html">&larr; Back</a>
+        <a class="cv-mobile-download" href="cv.pdf" download>Download</a>
     </div>
     <a class="cv-fab cv-fab-back" href="index.html" aria-label="Back to Portfolio">&larr;</a>
-    <a class="cv-fab cv-fab-download" href="https://drive.google.com/uc?export=download&amp;id=1eCDOeaJst7Og233NVIy0TpE58j1CXbwU">Download PDF</a>
+    <a class="cv-fab cv-fab-download" href="cv.pdf" download>Download PDF</a>
 </body>
 </html>
